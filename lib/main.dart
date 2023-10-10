@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment_magadh/utils/colors.dart';
 
 import 'package:get/get.dart';
 
@@ -8,6 +9,8 @@ void main() {
   runApp(
     GetMaterialApp(
       title: "Application",
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(primarySwatch: kPrimaryColor),
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
     ),
