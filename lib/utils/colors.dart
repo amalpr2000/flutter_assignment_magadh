@@ -22,3 +22,4 @@ const kwhite = Colors.white;
 final snackGreen = Colors.green[400]!;
 final snackred = Colors.red[400]!;
 const Color inActiveIconColor = Color(0xFFB6B6B6);
+

@@ -45,29 +45,41 @@ class LoginView extends GetView<LoginController> {
                                   'https://ouch-cdn2.icons8.com/cd4gOHjDnZr4P7oWg3a39Up9S933BAdv6k5V5svDQMk/rs:fit:368:368/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9zdmcvODM1/L2U5MjdkYjczLTkx/MjQtNDA5Mi05Y2Iy/LTczMDJkOWU5Mjgx/NS5zdmc.png'))),
                     ),
                     kHeight40,
-                    TextField(
-                      controller: controller.phoneNumberController,
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.blueGrey[50],
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.white)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.white)),
-                          prefixIcon: Icon(Icons.phone_android_rounded),
-                          label: Text('Phone number'),
-                          helperText: '',
-                          hintText: 'Enter your phone number'),
+                    Form(
+                      key: controller.formkeyPhone,
+                      child: TextFormField(
+                        // validator: (value) {
+                        //   if (value!.isEmpty) {
+                        //     return 'Enter valid phone Number';
+                        //   }
+                        // },
+                        controller: controller.phoneNumberController,
+                        keyboardType: TextInputType.phone,
+                        maxLength: 10,
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.blueGrey[50],
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(color: Colors.white)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(color: Colors.white)),
+                            prefixIcon: Icon(Icons.phone_android_rounded),
+                            label: Text('Phone number'),
+                            helperText: '',
+                            hintText: 'Enter your phone number'),
+                      ),
                     ),
+                    kHeight20,
                     SizedBox(
                       height: Get.height * 0.065,
                       width: Get.width,
                       child: ElevatedButton(
                         onPressed: () {
-                          controller.verifyNumber();
+                          if (controller.formkeyPhone.currentState!.validate()) {
+                            controller.verifyNumber();
+                          }
                         },
                         child: Text('Login'),
                         style: ElevatedButton.styleFrom(
@@ -117,21 +129,30 @@ class LoginView extends GetView<LoginController> {
                       height: 15,
                     ),
                     SizedBox(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Enter the OTP',
-                          label: Text('Enter the OTP'),
-                          filled: true,
-                          fillColor: Colors.blueGrey[50],
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.white)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.white)),
+                      child: Form(
+                        key: controller.formkeyOtp,
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Enter valid phone Number';
+                            }
+                          },
+                          maxLength: 6,
+                          decoration: InputDecoration(
+                            hintText: 'Enter the OTP',
+                            label: Text('Enter the OTP'),
+                            filled: true,
+                            fillColor: Colors.blueGrey[50],
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(color: Colors.white)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(color: Colors.white)),
+                          ),
+                          controller: controller.otpController,
+                          keyboardType: TextInputType.number,
                         ),
-                        controller: controller.otpController,
-                        keyboardType: TextInputType.number,
                       ),
                     ),
                     kHeight40,
@@ -140,7 +161,9 @@ class LoginView extends GetView<LoginController> {
                       width: Get.width,
                       child: ElevatedButton(
                         onPressed: () {
+                          // if (controller.formkeyPhone.currentState!.validate()) {
                           controller.verifyOtp();
+                          // }
                         },
                         child: Text('Verify'),
                         style: ElevatedButton.styleFrom(

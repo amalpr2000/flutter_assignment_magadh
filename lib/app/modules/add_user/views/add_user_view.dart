@@ -69,6 +69,7 @@ class AddUserView extends GetView<AddUserController> {
                     decoration: InputDecoration(
                         counterText: "",
                         filled: true,
+                        
                         fillColor: Colors.blueGrey[50],
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -156,8 +157,13 @@ class AddUserView extends GetView<AddUserController> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12.0))),
                           onPressed: (() {
-                            controller.createUser();
-                            // Get.back();
+                            if (controller.formkey1.currentState!.validate() &&
+                                controller.formkey2.currentState!.validate() &&
+                                controller.formkey3.currentState!.validate()) {
+                                  controller.createUser();
+                            
+                                }
+                            
                           }),
                           child: Text(
                             'Add',

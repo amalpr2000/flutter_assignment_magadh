@@ -2,7 +2,9 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment_magadh/app/routes/app_pages.dart';
+import 'package:flutter_assignment_magadh/utils/colors.dart';
 import 'package:flutter_assignment_magadh/utils/constants.dart';
+import 'package:flutter_assignment_magadh/utils/snackbar.dart';
 import 'package:get/get.dart';
 
 String token = '';
@@ -13,6 +15,8 @@ class LoginController extends GetxController {
   Map<String, dynamic> map = {};
   RxBool isVisible = true.obs;
   Dio dio = Dio();
+  final formkeyPhone = GlobalKey<FormState>();
+  final formkeyOtp = GlobalKey<FormState>();
 
   verifyNumber() async {
     try {
@@ -55,6 +59,7 @@ class LoginController extends GetxController {
           ));
       if (response.statusCode == 200) {
         log('Token Verifieddddddddddddddddddddddd');
+        customSnackbar(title: 'Login', msg: 'Login Success', barColor: snackGreen);
         Get.offAndToNamed(Routes.HOME);
       }
     } catch (e) {}
