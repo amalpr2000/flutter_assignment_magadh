@@ -11,8 +11,8 @@ String token = '';
 
 class LoginController extends GetxController {
   final TextEditingController phoneNumberController = TextEditingController();
-  TextEditingController otpController = TextEditingController();
   Map<String, dynamic> map = {};
+  TextEditingController otpController = TextEditingController();
   RxBool isVisible = true.obs;
   Dio dio = Dio();
   final formkeyPhone = GlobalKey<FormState>();
@@ -37,7 +37,7 @@ class LoginController extends GetxController {
   verifyOtp() async {
     try {
       final response = await dio.post(baseUrl + loginVerify,
-          data: {"phone": phoneNumberController.text, "otp": otpController.text});
+          data: {"phone": phoneNumberController.text, "otp": map['otp']});
       if (response.statusCode == 200 || response.statusCode == 201) {
         var map = Map<String, dynamic>.from(response.data);
         print('tokeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeen in map');

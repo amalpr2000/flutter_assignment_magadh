@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment_magadh/app/routes/app_pages.dart';
-import 'package:flutter_assignment_magadh/utils/colors.dart';
+
 import 'package:flutter_assignment_magadh/utils/constants.dart';
 
 import 'package:get/get.dart';
@@ -11,7 +11,6 @@ class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    controller.fetchUsers();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
@@ -63,7 +62,9 @@ class HomeView extends GetView<HomeController> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.toNamed(Routes.ADD_USER);
+          Get.toNamed(
+            Routes.ADD_USER,
+          );
         },
         child: Icon(Icons.person_add_alt_1),
       ),

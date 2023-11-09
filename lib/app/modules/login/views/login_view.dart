@@ -12,6 +12,7 @@ class LoginView extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        extendBody: true,
         appBar: AppBar(
           title: const Text('Login'),
           centerTitle: true,
@@ -38,7 +39,8 @@ class LoginView extends GetView<LoginController> {
                     ),
                     kHeight40,
                     Container(
-                      height: Get.height * 0.2,
+                      // height: Get.height * 0.2,
+                      height: 200,
                       decoration: BoxDecoration(
                           image: DecorationImage(
                               image: NetworkImage(
@@ -73,8 +75,10 @@ class LoginView extends GetView<LoginController> {
                     ),
                     kHeight20,
                     SizedBox(
-                      height: Get.height * 0.065,
-                      width: Get.width,
+                      // height: Get.height * 0.065,
+                      height: 50,
+                      // width: Get.width,
+                      width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
                           if (controller.formkeyPhone.currentState!.validate()) {
@@ -132,15 +136,17 @@ class LoginView extends GetView<LoginController> {
                       child: Form(
                         key: controller.formkeyOtp,
                         child: TextFormField(
+                          readOnly: true,
+                          initialValue: controller.map['otp'].toString(),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Enter valid phone Number';
+                              return 'Enter valid OTP';
                             }
                           },
                           maxLength: 6,
                           decoration: InputDecoration(
-                            hintText: 'Enter the OTP',
-                            label: Text('Enter the OTP'),
+                            hintText: 'Verify the OTP',
+                            label: Text('Verify the OTP'),
                             filled: true,
                             fillColor: Colors.blueGrey[50],
                             border: OutlineInputBorder(
@@ -150,7 +156,7 @@ class LoginView extends GetView<LoginController> {
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(color: Colors.white)),
                           ),
-                          controller: controller.otpController,
+                          // controller: controller.otpController,
                           keyboardType: TextInputType.number,
                         ),
                       ),

@@ -4,7 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter_assignment_magadh/app/data/models/user_model.dart';
 import 'package:flutter_assignment_magadh/app/modules/login/controllers/login_controller.dart';
 import 'package:flutter_assignment_magadh/utils/constants.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomeController extends GetxController {
   //TODO: Implement HomeController

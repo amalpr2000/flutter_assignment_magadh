@@ -17,14 +17,28 @@ class UserDetailsView extends GetView<UserDetailsController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold( 
         appBar: AppBar(
           title: const Text('UserDetails'),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  controller.createUpdate();
+                },
+                icon: Icon(Icons.update))
+          ],
           centerTitle: true,
         ),
         body: FutureBuilder(
           future: HomeController().fetchUsers(),
           builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Container(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
             double lat = snapshot.data!.users![index].location!.latitude ?? 0;
             double long = snapshot.data!.users![index].location!.longitude ?? 0;
             if (snapshot.data == null) {

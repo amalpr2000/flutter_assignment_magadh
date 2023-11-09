@@ -16,6 +16,13 @@ class AddUserView extends GetView<AddUserController> {
       appBar: AppBar(
         title: const Text('Add User'),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                controller.fetchfromDevice();
+              },
+              icon: Icon(Icons.my_location_sharp))
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -69,7 +76,6 @@ class AddUserView extends GetView<AddUserController> {
                     decoration: InputDecoration(
                         counterText: "",
                         filled: true,
-                        
                         fillColor: Colors.blueGrey[50],
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -116,28 +122,41 @@ class AddUserView extends GetView<AddUserController> {
                       kHeight10,
                       Text('Select the location'),
                       kHeight20,
-                      SizedBox(
-                        height: 200,
-                        child: GoogleMap(
-                          onMapCreated: (controllermap) {
-                            controller.mapController = controllermap;
-                          },
-                          initialCameraPosition: const CameraPosition(
-                            target: LatLng(28.6139, 77.2090),
-                            zoom: 15.0,
-                          ),
-                          markers: <Marker>{
-                            Marker(
-                              markerId: const MarkerId('myMarker'),
-                              position: const LatLng(28.6139, 77.2090),
-                              draggable: true,
-                              onDragEnd: (newPosition) {
-                                controller.markerPosition = newPosition;
-                                log(controller.markerPosition.toString());
-                              },
-                            ),
-                          },
-                        ),
+                      Obx(
+                        () => controller.isLoc.value
+                            ? SizedBox(
+                                height: 200,
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              )
+                            : SizedBox(
+                                child: SizedBox(
+                                  height: 200,
+                                  child: GoogleMap(
+                                    onMapCreated: (controllermap) {
+                                      controller.mapController = controllermap;
+
+                                      controller.markerPosition = controller.markerPosition;
+                                    },
+                                    initialCameraPosition: CameraPosition(
+                                      target: controller.markerPosition,
+                                      zoom: 15.0,
+                                    ),
+                                    markers: <Marker>{
+                                      Marker(
+                                        markerId: const MarkerId('myMarker'),
+                                        position: controller.markerPosition,
+                                        draggable: true,
+                                        onDragEnd: (newPosition) {
+                                          controller.markerPosition = newPosition;
+                                          log(controller.markerPosition.toString());
+                                        },
+                                      ),
+                                    },
+                                  ),
+                                ),
+                              ),
                       ),
                     ],
                   ),
@@ -160,10 +179,8 @@ class AddUserView extends GetView<AddUserController> {
                             if (controller.formkey1.currentState!.validate() &&
                                 controller.formkey2.currentState!.validate() &&
                                 controller.formkey3.currentState!.validate()) {
-                                  controller.createUser();
-                            
-                                }
-                            
+                              controller.createUser();
+                            }
                           }),
                           child: Text(
                             'Add',
@@ -173,7 +190,7 @@ class AddUserView extends GetView<AddUserController> {
                       width: 80,
                     ),
                     SizedBox(
-                      width: Get.width * 0.25,
+                      width: Get.width * 0.26,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 12.0),
