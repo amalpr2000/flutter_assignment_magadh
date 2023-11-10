@@ -52,14 +52,12 @@ class Users {
       this.image});
 
   Users.fromJson(Map<String, dynamic> json) {
-    location = json['location'] != null
-        ? new Location.fromJson(json['location'])
-        : null;
+    location = json['location'] != null ? new Location.fromJson(json['location']) : null;
     sId = json['_id'];
     name = json['name'];
     email = json['email'];
     phone = json['phone'];
-    iV = json['__v'];
+    // iV = json['__v'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     token = json['token'];
@@ -91,8 +89,9 @@ class Location {
   Location({this.latitude, this.longitude});
 
   Location.fromJson(Map<String, dynamic> json) {
-    latitude = json['latitude'];
-    longitude = json['longitude'];
+    latitude = (json['latitude'] is int) ? (json['latitude'] as int).toDouble() : json['latitude'];
+    longitude =
+        (json['longitude'] is int) ? (json['longitude'] as int).toDouble() : json['longitude'];
   }
 
   Map<String, dynamic> toJson() {

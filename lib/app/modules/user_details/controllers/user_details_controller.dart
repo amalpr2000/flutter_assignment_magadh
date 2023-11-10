@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_assignment_magadh/app/data/models/user_model.dart';
 import 'package:flutter_assignment_magadh/utils/constants.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -29,6 +30,8 @@ class UserDetailsController extends GetxController {
   void increment() => count.value++;
   late GoogleMapController mapController;
   late LatLng markerPosition;
+
+  Users user = Get.arguments;
 
   createUpdate() async {
     Dio dio = Dio();

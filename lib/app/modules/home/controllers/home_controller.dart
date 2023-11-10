@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_assignment_magadh/app/data/models/user_model.dart';
 import 'package:flutter_assignment_magadh/app/modules/login/controllers/login_controller.dart';
 import 'package:flutter_assignment_magadh/utils/constants.dart';
@@ -12,10 +13,23 @@ import 'package:permission_handler/permission_handler.dart';
 class HomeController extends GetxController {
   //TODO: Implement HomeController
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
+    fetchUsers();
+    ever(page, (callback) {
+      if (callback != 0) fetchUsers();
+    });
+    debounce(query, (callback) {
+      fetchUsers();
+    }, time: Duration(milliseconds: 500));
+    scrollController.addListener(() {
+      log('Add Listener');
+      if (isLoading.value) {
+        return;
+      }
+      if (isTouchingBottom) page.value++;
+    });
   }
 
   @override
@@ -28,26 +42,38 @@ class HomeController extends GetxController {
     super.onClose();
   }
 
-  void increment() => count.value++;
-
+  RxString query = ''.obs;
+  int count = 0;
+  RxBool isLoading = false.obs;
   Dio dio = Dio();
   Map<String, dynamic> userData = {};
   // String token = "";
-  Future<UserModel?> fetchUsers() async {
-    log('heloooooooooooooooooooooooooooo');
+  // UserModel userModelObj = UserModel();
+  RxList<Users> userList = <Users>[].obs;
+  RxInt page = 1.obs;
+  ScrollController scrollController = ScrollController();
+  bool get isTouchingBottom {
+    log('touching bottom');
+    return scrollController.position.pixels == scrollController.position.maxScrollExtent;
+  }
 
+  Future<void> fetchUsers() async {
     try {
+      isLoading.value = true;
       final response = await dio.get(baseUrl + allUsers,
+          queryParameters: {'limit': '20', 'page': '${page.value}', 'search': query.value},
           options: Options(
             headers: {"Authorization": "Bearer $token"},
           ));
       if (response.statusCode == 200) {
-        return UserModel.fromJson(response.data);
+        // userModelObj = UserModel.fromJson(response.data);
+        count = response.data['count'];
+        userList.addAll((response.data['users'] as List).map((e) => Users.fromJson(e)));
       }
     } catch (e) {
-      print('Errrrrrrrrrrrrrorrrrrrrrrrrrrrrrrrrrrrrrrrr OTP');
-      log(e.toString());
+      log('Error fetchUsers : $e');
+    } finally {
+      isLoading.value = false;
     }
-    return null;
   }
 }

@@ -125,7 +125,7 @@ class LoginView extends GetView<LoginController> {
                       textAlign: TextAlign.center,
                     ),
                     Text(
-                      ' ${controller.map['otp']}',
+                      ' ${controller.otp}',
                       style: TextStyle(color: kPrimaryColor, fontSize: 20),
                       textAlign: TextAlign.center,
                     ),
@@ -136,8 +136,8 @@ class LoginView extends GetView<LoginController> {
                       child: Form(
                         key: controller.formkeyOtp,
                         child: TextFormField(
-                          readOnly: true,
-                          initialValue: controller.map['otp'].toString(),
+                          // readOnly: true,
+                          initialValue: controller.otp,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Enter valid OTP';
