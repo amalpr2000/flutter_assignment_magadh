@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment_magadh/utils/colors.dart';
 import 'package:flutter_assignment_magadh/utils/constants.dart';
+import 'package:flutter_assignment_magadh/utils/snackbar.dart';
 
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -70,6 +72,13 @@ class AddUserView extends GetView<AddUserController> {
                       if (value == null || value.isEmpty) {
                         return 'Enter the phone Number';
                       }
+                      if (!RegExp(r"^[0-9]{10}$").hasMatch(value)) {
+                        customSnackbar(
+                            title: 'Format incorrect',
+                            msg: 'Enter a valid phone number',
+                            barColor: snackred);
+                        return 'Invalid phone number format';
+                      }
                     },
                     keyboardType: TextInputType.phone,
                     maxLength: 10,
@@ -103,6 +112,14 @@ class AddUserView extends GetView<AddUserController> {
                           if (value == null || value.isEmpty) {
                             return 'Enter the email';
                           }
+                          if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
+                            customSnackbar(
+                                title: 'Format incorrect',
+                                msg: 'Enter a valid E-mail',
+                                barColor: snackred);
+                            return 'Enter a valid E-mail';
+                          }
+                          ;
                         },
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
@@ -124,11 +141,44 @@ class AddUserView extends GetView<AddUserController> {
                       kHeight20,
                       Obx(
                         () => controller.isLoc.value
-                            ? SizedBox(
-                                height: 200,
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
+                            ? Stack(
+                                children: [
+                                  SizedBox(
+                                    child: SizedBox(
+                                      height: 200,
+                                      child: GoogleMap(
+                                        onMapCreated: (controllermap) {
+                                          controller.mapController = controllermap;
+
+                                          controller.markerPosition = controller.markerPosition;
+                                        },
+                                        initialCameraPosition: CameraPosition(
+                                          target: controller.markerPosition,
+                                          zoom: 15.0,
+                                        ),
+                                        markers: <Marker>{
+                                          Marker(
+                                            markerId: const MarkerId('myMarker'),
+                                            position: controller.markerPosition,
+                                            draggable: true,
+                                            onDragEnd: (newPosition) {
+                                              controller.markerPosition = newPosition;
+                                              log(controller.markerPosition.toString());
+                                            },
+                                          ),
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 200,
+                                    width: double.infinity,
+                                    color: Colors.white.withOpacity(.5),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  )
+                                ],
                               )
                             : SizedBox(
                                 child: SizedBox(

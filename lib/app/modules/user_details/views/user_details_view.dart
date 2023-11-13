@@ -27,13 +27,6 @@ class UserDetailsView extends GetView<UserDetailsController> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('UserDetails'),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  controller.createUpdate();
-                },
-                icon: Icon(Icons.update))
-          ],
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -43,14 +36,11 @@ class UserDetailsView extends GetView<UserDetailsController> {
               SizedBox(
                 height: Get.height * 0.05,
               ),
-              SizedBox(
-                width: double.infinity,
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(controller.user.image != null
-                      ? (img + controller.user.image!)
-                      : 'https://edug.in/panel/head_admin/School/school_head/first_photo/DEMO59167.jpg'),
-                  radius: 80,
-                ),
+              CircleAvatar(
+                backgroundImage: NetworkImage(controller.user.image != null
+                    ? (img + controller.user.image!)
+                    : 'https://edug.in/panel/head_admin/School/school_head/first_photo/DEMO59167.jpg'),
+                radius: 80,
               ),
               Padding(
                 padding: const EdgeInsets.all(10),

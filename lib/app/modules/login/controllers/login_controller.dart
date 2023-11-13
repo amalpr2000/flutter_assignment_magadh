@@ -7,14 +7,14 @@ import 'package:flutter_assignment_magadh/utils/colors.dart';
 import 'package:flutter_assignment_magadh/utils/constants.dart';
 import 'package:flutter_assignment_magadh/utils/snackbar.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 String token = '';
 
 class LoginController extends GetxController {
-  String otp = '';
   final TextEditingController phoneNumberController =
       TextEditingController(text: kDebugMode ? '7025307719' : null);
-  // Map<String, dynamic> map = {};
+
   TextEditingController otpController = TextEditingController();
   RxBool isVisible = true.obs;
   Dio dio = Dio();
@@ -28,34 +28,31 @@ class LoginController extends GetxController {
         isVisible.value = false;
       }
 
-      // map = Map<String, dynamic>.from(response.data);
       log(response.statusCode.toString());
       log(response.data.toString());
-      otp = response.data['otp'].toString();
+      otpController.text = response.data['otp'].toString();
     } catch (e) {
-     log('Error verifyNumber : $e');
+      log('Error verifyNumber : $e');
+      customSnackbar(title: 'Invalid number', msg: 'Please enter valid number', barColor: snackred);
     }
   }
 
   verifyOtp() async {
     try {
-      final response = await dio
-          .post(baseUrl + loginVerify, data: {"phone": phoneNumberController.text, "otp": otp});
+      final response = await dio.post(baseUrl + loginVerify,
+          data: {"phone": phoneNumberController.text, "otp": otpController.text});
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // var map = Map<String, dynamic>.from(response.data);
         token = response.data['token'].toString();
+        tokenVerification();
 
-        print('tokeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeen');
+        print('otp verified');
         log(token);
-        // print(map["token"]);
-        // token = map["token"];
       }
     } catch (e) {
       print(' OTP not verified');
+      customSnackbar(title: 'OTP not verified', msg: 'Enter a valid OTP', barColor: snackred);
       log(e.toString());
-    } finally {
-      tokenVerification();
-    }
+    } finally {}
   }
 
   tokenVerification() async {
@@ -66,10 +63,15 @@ class LoginController extends GetxController {
           ));
       if (response.statusCode == 200) {
         log('Token Verifieddddddddddddddddddddddd');
+        final _sharedPrefs = await SharedPreferences.getInstance();
+        await _sharedPrefs.setString('tokenSaved', '$token');
         customSnackbar(title: 'Login', msg: 'Login Success', barColor: snackGreen);
         Get.offAndToNamed(Routes.HOME);
       }
     } catch (e) {
+      final _sharedPrefs = await SharedPreferences.getInstance();
+      await _sharedPrefs.setString('tokenSaved', 'notverified');
+
       log('Error tokenVerification : $e');
     }
   }

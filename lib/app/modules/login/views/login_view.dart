@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_assignment_magadh/utils/colors.dart';
 import 'package:flutter_assignment_magadh/utils/constants.dart';
+import 'package:flutter_assignment_magadh/utils/snackbar.dart';
 
 import 'package:get/get.dart';
 
@@ -39,7 +40,6 @@ class LoginView extends GetView<LoginController> {
                     ),
                     kHeight40,
                     Container(
-                      // height: Get.height * 0.2,
                       height: 200,
                       decoration: BoxDecoration(
                           image: DecorationImage(
@@ -50,11 +50,18 @@ class LoginView extends GetView<LoginController> {
                     Form(
                       key: controller.formkeyPhone,
                       child: TextFormField(
-                        // validator: (value) {
-                        //   if (value!.isEmpty) {
-                        //     return 'Enter valid phone Number';
-                        //   }
-                        // },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Enter valid phone Number';
+                          }
+                          if (!RegExp(r"^[0-9]{10}$").hasMatch(value)) {
+                            customSnackbar(
+                                title: 'Format incorrect',
+                                msg: 'Enter a valid phone number',
+                                barColor: snackred);
+                            print('Invalid phone number format');
+                          }
+                        },
                         controller: controller.phoneNumberController,
                         keyboardType: TextInputType.phone,
                         maxLength: 10,
@@ -125,7 +132,7 @@ class LoginView extends GetView<LoginController> {
                       textAlign: TextAlign.center,
                     ),
                     Text(
-                      ' ${controller.otp}',
+                      ' ${controller.otpController.text}',
                       style: TextStyle(color: kPrimaryColor, fontSize: 20),
                       textAlign: TextAlign.center,
                     ),
@@ -136,10 +143,9 @@ class LoginView extends GetView<LoginController> {
                       child: Form(
                         key: controller.formkeyOtp,
                         child: TextFormField(
-                          // readOnly: true,
-                          initialValue: controller.otp,
+                          controller: controller.otpController,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null || value.length != 6) {
                               return 'Enter valid OTP';
                             }
                           },
@@ -156,20 +162,19 @@ class LoginView extends GetView<LoginController> {
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(color: Colors.white)),
                           ),
-                          // controller: controller.otpController,
                           keyboardType: TextInputType.number,
                         ),
                       ),
                     ),
-                    kHeight40,
+                    kHeight10,
                     SizedBox(
                       height: Get.height * 0.065,
                       width: Get.width,
                       child: ElevatedButton(
                         onPressed: () {
-                          // if (controller.formkeyPhone.currentState!.validate()) {
-                          controller.verifyOtp();
-                          // }
+                          if (controller.formkeyOtp.currentState!.validate()) {
+                            controller.verifyOtp();
+                          }
                         },
                         child: Text('Verify'),
                         style: ElevatedButton.styleFrom(

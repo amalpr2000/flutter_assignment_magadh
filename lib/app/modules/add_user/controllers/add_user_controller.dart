@@ -17,13 +17,16 @@ class AddUserController extends GetxController {
   final formkey3 = GlobalKey<FormState>();
   String imgPath = 'x';
   final namecontroller = TextEditingController();
-
   final phonecontroller = TextEditingController();
   final emailcontroller = TextEditingController();
   late GoogleMapController mapController;
   LatLng markerPosition = LatLng(28.6139, 77.2090);
   RxBool isLoc = false.obs;
   Dio dio = Dio();
+
+// Creating User
+
+
   createUser() async {
     try {
       final response = await dio.post(baseUrl + createNewUser,
@@ -49,6 +52,8 @@ class AddUserController extends GetxController {
     }
   }
 
+// Fetching current Location
+
   Future fetchfromDevice() async {
     bool status = await requestPermission();
     if (status) {
@@ -66,10 +71,13 @@ class AddUserController extends GetxController {
   }
 
   getCurrentLocation() async {
+    log('ENter get curent');
     isLoc.value = true;
+    log('ENter get jkdsfk');
 
     var p = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.low, forceAndroidLocationManager: true);
+    log('ENter get curent after position');
     print('The current location isssssssssss');
     markerPosition = LatLng(p.latitude, p.longitude);
     // update();
@@ -79,4 +87,6 @@ class AddUserController extends GetxController {
 
     return p;
   }
+
+
 }
